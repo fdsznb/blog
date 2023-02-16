@@ -3,5 +3,149 @@
   
   
   
+  <entry>
+    <title>未完成的事情</title>
+    <link href="/2099/02/16/%E6%9C%AA%E5%AE%8C%E6%88%90%E7%9A%84%E4%BA%8B%E6%83%85/"/>
+    <url>/2099/02/16/%E6%9C%AA%E5%AE%8C%E6%88%90%E7%9A%84%E4%BA%8B%E6%83%85/</url>
+    
+    <content type="html"><![CDATA[<ul><li>设计模式</li><li>ThreadLocal 源码解析理解</li></ul>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>并发编程线程基础</title>
+    <link href="/2023/02/15/Java%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AF%87/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/"/>
+    <url>/2023/02/15/Java%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%AD%A6%E4%B9%A0%E7%AF%87/%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%BA%BF%E7%A8%8B%E5%9F%BA%E7%A1%80/</url>
+    
+    <content type="html"><![CDATA[<h2 id="一、并发编程线程基础"><a href="#一、并发编程线程基础" class="headerlink" title="一、并发编程线程基础"></a>一、并发编程线程基础</h2><h3 id="1-什么是进程、线程"><a href="#1-什么是进程、线程" class="headerlink" title="1.什么是进程、线程"></a>1.什么是进程、线程</h3><p>进程是代码在数据集合上的一次运行活动，是系统进行资源分配和调度的基本单位，线程则是进程的一个执行路径，一个进程至少有一个线程，进程中的多个线程共享进程的资源。</p><blockquote><p>操作系统在分配资源时是把资源分配给进程的，但是 CPU 资源比较特殊，它是分配到线程的，因为真正要占用 CPU 运行的是线程，所以也说线程是 CPU 分配的基本单位。</p></blockquote><h3 id="2-线程创建的三种方式"><a href="#2-线程创建的三种方式" class="headerlink" title="2.线程创建的三种方式"></a>2.线程创建的三种方式</h3><p>Java 中有线程创建方式，分别为实现 Runnable 接口的 run 方法，继承 Thread 类并重写 run 方法，使用 FutureTask 方式。</p><h4 id="2-1-继承-Thread-类并重写-run-方法"><a href="#2-1-继承-Thread-类并重写-run-方法" class="headerlink" title="2.1 继承 Thread 类并重写 run 方法"></a>2.1 继承 Thread 类并重写 run 方法</h4><figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ExtendThreadDemo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">MyThread</span> <span class="hljs-variable">myThread</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyThread</span>();<br>        <span class="hljs-comment">/**</span><br><span class="hljs-comment">         * 其实调用 start 方法后线程并没有马上执行而 处于就 状态， 这个就绪状态是指</span><br><span class="hljs-comment">         * 线程已经获取了除 CPU 资源外的其 资源，等待获取 CPU 资源后才会真正处于运行状态。</span><br><span class="hljs-comment">         * 一旦 run 方法执行完毕， 该线程就处于终止状态</span><br><span class="hljs-comment">         */</span><br>        myThread.start();<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyThread</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Thread</span>&#123;<br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>            System.out.println(<span class="hljs-string">&quot;This a thread&#x27;s run method.&quot;</span>);<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure><h4 id="2-2-实现-Runnable-的-run-方法"><a href="#2-2-实现-Runnable-的-run-方法" class="headerlink" title="2.2 实现 Runnable 的 run 方法"></a>2.2 实现 Runnable 的 run 方法</h4><figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ImplementRunnableThreadDemo</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyThread</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Runnable</span> &#123;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>            System.out.println(<span class="hljs-string">&quot;I&#x27;m a thread run method.&quot;</span>);<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">MyThread</span> <span class="hljs-variable">myThread</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">MyThread</span>();<br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(myThread).start();<br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(myThread).start();<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure><h4 id="2-3-使用-FutureTask-方式"><a href="#2-3-使用-FutureTask-方式" class="headerlink" title="2.3 使用 FutureTask 方式"></a>2.3 使用 FutureTask 方式</h4><figure class="highlight java"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FutureTaskThreadDemo</span> &#123;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CallerTask</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Callable</span>&lt;String&gt; &#123;<br><br>        <span class="hljs-meta">@Override</span><br>        <span class="hljs-keyword">public</span> String <span class="hljs-title function_">call</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> Exception &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;violet&quot;</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        FutureTask&lt;String&gt; futureTask = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FutureTask</span>&lt;String&gt;(<span class="hljs-keyword">new</span> <span class="hljs-title class_">CallerTask</span>()); <br>        <span class="hljs-keyword">new</span> <span class="hljs-title class_">Thread</span>(futureTask).start();<br>        <br>        <span class="hljs-keyword">try</span> &#123;<br>            <span class="hljs-type">String</span> <span class="hljs-variable">res</span> <span class="hljs-operator">=</span> futureTask.get();<br>            System.out.println(<span class="hljs-string">&quot;线程执行完成返回结果：&quot;</span> + res);<br>        &#125; <span class="hljs-keyword">catch</span>(Exception e) &#123;<br>            e.printStackTrace();<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></div></td></tr></table></figure><h3 id="3-线程通知与等待"><a href="#3-线程通知与等待" class="headerlink" title="3.线程通知与等待"></a>3.线程通知与等待</h3><p>Java 中的 Object 类是所有类的父类，鉴于继承机制， Java 把所有类都需要的方法放到了 Object 类里面，其中就包含线程通知与等待系列函数。</p><h4 id="3-1-wait-函数"><a href="#3-1-wait-函数" class="headerlink" title="3.1 wait() 函数"></a>3.1 wait() 函数</h4><p>当一个线程调用一个共享变量 wait() 方法时, 该调用线程会被阻塞挂起, 到发生下面几件事情之一才返回:</p><ul><li>其他线程调用了该共享对象 notify() 或者 notifyAll() 方法</li><li>其他线程调用了该线程 interrupt() 方法, 该线程抛出 InterruptedException 异常返回。</li></ul><blockquote><p>如果调用 wait()方法的线程没有事先获取该对象的监视器锁，则调用 wait() 方法时调用 线程会抛出 IllegalMonitorStateExce ption 异常。</p></blockquote><h4 id="3-2-notify-函数"><a href="#3-2-notify-函数" class="headerlink" title="3.2 notify() 函数"></a>3.2 notify() 函数</h4><p>唤醒一个在该共享变量上调用 wait 系列方法后被挂起的线程。</p><h4 id="3-3-notifyAll-函数"><a href="#3-3-notifyAll-函数" class="headerlink" title="3.3 notifyAll() 函数"></a>3.3 notifyAll() 函数</h4><p>唤醒所有在该共享变量上由于调用 wait 系列方法而被挂起的线程。</p><h4 id="3-4等待线程执行终止的-join-方法"><a href="#3-4等待线程执行终止的-join-方法" class="headerlink" title="3.4等待线程执行终止的 join 方法"></a>3.4等待线程执行终止的 join 方法</h4><p>在项目实践中经常会遇到一个场景，就是需要等待某几件事情完成后才能继续往下执行，比如多个线程加载资源，需要等待多个线程全部加载完毕再汇总处理。</p><h4 id="3-5-让线程睡眠的-sleep-方法"><a href="#3-5-让线程睡眠的-sleep-方法" class="headerlink" title="3.5 让线程睡眠的 sleep 方法"></a>3.5 让线程睡眠的 sleep 方法</h4><p>当一个执行中的线程调用了 Thread 的 sleep 方法后，调用线程会暂时让出指定时间的执行权，也就是在这期间不参与 CPU 的调度，但是该线程所拥有的监视器资源，比如锁还是持有不让出的。</p><h4 id="3-6-让出-CPU-执行权的-yield-方法"><a href="#3-6-让出-CPU-执行权的-yield-方法" class="headerlink" title="3.6 让出 CPU 执行权的 yield 方法"></a>3.6 让出 CPU 执行权的 yield 方法</h4><p>Thread 有一个静态的 yield 方法，当一个线程调用 yield 方法时，实际就是在暗示线程调度器当前线程请求让出自己 CPU 使用，但是线程调度器可以无条件忽略这个暗示。</p><h4 id="3-7-线程中断"><a href="#3-7-线程中断" class="headerlink" title="3.7 线程中断"></a>3.7 线程中断</h4><p>Java 中的线程中断是一种线程间的协作模式，通过设置线程的中断标志并不能直接终止该线程的执行，而是被中断的线程根据中断状态自行处理。</p><ul><li><strong>void interrupt()</strong>: 中断线程，例如，当线程 A 运行时，线程 B 可以调用线程 A 的 interrupt() 方法来设置线程 A 的中断标志为 true 并立即返回。设置标志仅仅是设置标志，线程 A 实际并没有被中断，它会继续往下执行。如果线程 A 因为调用了 wait 系列函数、join 方法或者 sleep 方法而被阻塞挂起，这时候若线程 B 调用线程 A 的 interrupt() 方法，线程 A 会在调用这些方法的地方抛出 InterruptedException 异常而返回。</li><li><strong>boolean isInterrupted() 方法</strong>: 检测当前线程是否被中断，如果是返回 true, 否则返回 false。  </li><li><strong>boolean interrupted() 方法</strong>: 检测当前线程是否被中断，如果是返回 true，否则返回 false。与 isInterrupted 不同的是，该方法如果发现当前线程被中断，则会清除中断标志，并且该方法是 static 方法，可以通过 Thread 类直接调用。另外从下面给的代码可以知道，在 interrupted() 内部是获取当前调用线程的中断标志而不是调用 interrupted() 方法的实例对象的中断标志。</li></ul><h4 id="3-8-理解线程上下文切换"><a href="#3-8-理解线程上下文切换" class="headerlink" title="3.8 理解线程上下文切换"></a>3.8 理解线程上下文切换</h4><p>当前线程使用完时间片后，就会处于就绪状态并让出 CPU 让其他线程占有，这就是上下文切换。</p><blockquote><p>线程上下文切换时机有：当前线程的 CPU 时间片使用完处于就绪状态时，当前线程被其他线程中断时。</p></blockquote><h4 id="3-9-线程死锁"><a href="#3-9-线程死锁" class="headerlink" title="3.9 线程死锁"></a>3.9 线程死锁</h4><h5 id="3-9-1-什么是线程死锁"><a href="#3-9-1-什么是线程死锁" class="headerlink" title="3.9.1 什么是线程死锁"></a>3.9.1 什么是线程死锁</h5><p>死锁是指两个或两个以上的线程在执行任务过程中，因争夺资源而造成的互相等待的现象。</p><h5 id="3-9-2-死锁产生的必要条件"><a href="#3-9-2-死锁产生的必要条件" class="headerlink" title="3.9.2 死锁产生的必要条件"></a>3.9.2 死锁产生的必要条件</h5><ul><li><p>互斥条件：指线程对已经获取到的资源进行排它性使用，即该资源同时只由一个线程占用。如果此时还有其他线程请求获取该资源，则请求者只能等待，直至占有资源的线程释放该资源。</p></li><li><p>请求并持有条件：指一个线程已经持有了至少一个资源，但又提出了新的资源请求，而新资源已被其他线程占有，所有当前线程会被阻塞，但阻塞的同时并不释放自己已经获取的资源。</p></li><li><p>不可剥夺条件：指线程获取到的资源在自己使用完之前不能被其他线程抢占，只有在自己使用完毕后才由自己释放该资源。</p></li><li><p>环路等待条件：指在发生死锁时，必然存在一个线程–资源的环形链，即线程集合{T0，T1，T2，···，Tn}中的 T0 正在等待一个 T1 占用的资源，T1 正在等待 T2 占用的资源，······Tn 正在等待已被 T0 占用的资源。</p></li></ul><h5 id="3-9-3-如何避免线程死锁"><a href="#3-9-3-如何避免线程死锁" class="headerlink" title="3.9.3 如何避免线程死锁"></a>3.9.3 如何避免线程死锁</h5><p>要想避免死锁，只需要破坏掉至少一个构造死锁的必要条件即可，但是学过操作系统的读者应该都知道，目前只有请求并持有和环路等待条件是可以被破坏的。</p><h4 id="3-10-守护线程与用户线程"><a href="#3-10-守护线程与用户线程" class="headerlink" title="3.10 守护线程与用户线程"></a>3.10 守护线程与用户线程</h4><p>守护线程是为用户线程服务的，当一个程序中的所有用户线程都执行完成之后程序就会结束运行，程序结束运行时不会管守护线程是否正在运行。</p><blockquote><p>即使是守护线程，当程序中调用 join() 方法时，程序依然会等待守护线程执行完成之后再结束进程。</p></blockquote><h3 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h3><ul><li>《Java并发编程之美》</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>Java基础知识</category>
+      
+      <category>多线程学习</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>设计原则</title>
+    <link href="/2023/02/14/%E7%90%86%E8%AE%BA%E7%9F%A5%E8%AF%86/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/"/>
+    <url>/2023/02/14/%E7%90%86%E8%AE%BA%E7%9F%A5%E8%AF%86/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/%E8%AE%BE%E8%AE%A1%E5%8E%9F%E5%88%99/</url>
+    
+    <content type="html"><![CDATA[<ul><li><p>找出应用中可能需要变化之处，把它们独立出来，不要和那些不需要变化的代码混在一起。</p><blockquote><p>把会变化的部分取出并 “封装” 起来，好让其他部分不会受到影响。</p></blockquote></li><li><p>针对接口编程，而不是针对实现编程。</p><blockquote><p>类的行为将被放在分开的类中，此类专门提供某行为接口的实现，这样就不需要知道类具体的实现细节。</p></blockquote></li><li><p>多用组合，少用继承。</p><blockquote><p>使用组合建立系统具有很大的弹性，不仅可以将算法族封装成类，更可以 “在运行时动态的改变行为”，只要组合的行为对象符合正确的接口标准即可。</p></blockquote></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>理论知识</category>
+      
+      <category>设计模式</category>
+      
+      <category>设计原则</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计原则</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>学习过程中陌生的单词</title>
+    <link href="/2023/02/14/Java%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%99%8C%E7%94%9F%E7%9A%84%E5%8D%95%E8%AF%8D/%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%99%8C%E7%94%9F%E7%9A%84%E5%8D%95%E8%AF%8D/"/>
+    <url>/2023/02/14/Java%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/%E5%A4%9A%E7%BA%BF%E7%A8%8B/%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%99%8C%E7%94%9F%E7%9A%84%E5%8D%95%E8%AF%8D/%E5%AD%A6%E4%B9%A0%E8%BF%87%E7%A8%8B%E4%B8%AD%E9%99%8C%E7%94%9F%E7%9A%84%E5%8D%95%E8%AF%8D/</url>
+    
+    <content type="html"><![CDATA[<ul><li>decoy：n.诱饵 v.引诱</li><li>differ：vi.不同</li><li>counterpart：n.对应方; 职位(或作用)相当的人</li><li>independent: adj.独立的</li><li>typical：adj.典型的</li><li>assign: vt.分派；委派</li><li>invoke：vt.提出；调用</li><li>subsequent: adj.后来的; 随后的;</li><li>implicit: adj.含蓄的，无疑问的</li><li>as long as：只要；和…一样长</li><li>access：n.通道；vt.访问，到达</li><li>subject：n.主题；vt.使…臣服；adj.可能受…的影响</li><li>garbage：n.(生活)垃圾；垃圾桶</li><li>probe：v.探查；追问；n.探究</li><li>linear：adj.线性的，直线的</li><li>inheritable: adj.可遗传的</li><li>custom：n.风俗，习性；adj.定做的</li><li>collision：n.碰撞；（两人之间或对立意见、看法等之间的）冲突</li><li>eliminate：vt.消除，排除</li><li>consecutive：adj.连续的</li><li>behave：v.表现，举止</li><li>sequential：adj.连续的，按次序的；</li><li>optimal：adj.最优的，最佳的</li><li>multiplicative：n.乘法；adj.增加的；倍增的</li><li>in which：在其中；在…其中；</li><li>anonymous：adj.匿名的</li><li>threshold：n.门槛，阈，界</li><li>expunge：vt.消除，消去</li><li>stale: adj.陈腐的；不新鲜的；n.(牛马、骆驼)尿；vt.使陈旧</li><li>solely：adv.唯一地；仅；只；</li><li>concurrent: adj.同时发生的; n.共存物</li><li>priority：n.优先；优先权</li><li>allocate: vt.分配</li><li>prime: adj.首要的；n.盛年；</li><li>purpose：n.意图；目的；vt.有意；打算</li><li>pertain：vi.适合</li><li>indicate：v.表明；暗示</li><li>hint: n.暗示；征兆；v.暗示</li><li>yield：n.产量；利润；v.屈服；提供</li><li>heuristic：adj.(教学或教育)启发式的</li><li>improve：v.改善；改进</li><li>relative：adj.相对的；比较的；n.亲戚；亲属；同类事物</li><li>otherwise：否则</li><li>utilise：vt.利用；使用</li><li>combine：v.结合；联合；n.集团</li><li>profile: n.简介；概述；vt.概述</li><li>benchmark: n.基准；vt.检测(用基准问题测试)</li><li>appropriate：适合的；恰当的；vt.盗用；挪用；占用</li><li>reproduce：v.复制；繁殖；</li><li>specify：vt.具体说明；详述</li><li>precision：n.精确；细致；adj.精确的；</li><li>accuracy：n.精确(程度)；准确(性)</li><li>ownership：n.所有权</li><li>negative：adj.消极的；负面的；n.否定；vt.否定；拒绝</li><li>supply：n.供给；供应；v.提供</li><li>persistent：adj.执着的；不屈不挠的</li><li>conceptual：adj.概念(上)的；</li><li></li><li></li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>单词学习</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>单词学习</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>行为型模式-策略模式</title>
+    <link href="/2023/02/14/%E7%90%86%E8%AE%BA%E7%9F%A5%E8%AF%86/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/"/>
+    <url>/2023/02/14/%E7%90%86%E8%AE%BA%E7%9F%A5%E8%AF%86/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%A1%8C%E4%B8%BA%E5%9E%8B%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/</url>
+    
+    <content type="html"><![CDATA[<h2 id="一、-定义"><a href="#一、-定义" class="headerlink" title="一、 定义"></a>一、 定义</h2><p>策略模式定义了算法族，分别封装起来，让它们之间可以互相替换，此模式让算法的变化独立于使用算法的客户。</p><h2 id=""><a href="#" class="headerlink" title=""></a></h2>]]></content>
+    
+    
+    <categories>
+      
+      <category>理论知识</category>
+      
+      <category>设计模式</category>
+      
+      <category>行为型模式</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>设计模式学习方法</title>
+    <link href="/2023/02/14/%E7%90%86%E8%AE%BA%E7%9F%A5%E8%AF%86/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/"/>
+    <url>/2023/02/14/%E7%90%86%E8%AE%BA%E7%9F%A5%E8%AF%86/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E5%AD%A6%E4%B9%A0%E6%96%B9%E6%B3%95/</url>
+    
+    <content type="html"><![CDATA[<h2 id="让大脑就范的方法"><a href="#让大脑就范的方法" class="headerlink" title="让大脑就范的方法"></a>让大脑就范的方法</h2><ul><li>慢一点，你理解的越多，记得就越少</li><li>勤做练习，自己做笔记</li><li>阅读 “There are no Dumb Questions” 部分</li><li>上床睡觉前不要再看别的书本了，或至少不再看其它有难度的东西</li><li>要喝水，而且要多喝水</li><li>大声说出来</li><li>听听你的大脑怎么说</li><li>要有点感觉</li><li>设计一些东西</li></ul><p>参考《HEAD FIRST设计模式 （中文版）》</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>理论知识</category>
+      
+      <category>设计模式</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>设计模式</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
   
 </search>

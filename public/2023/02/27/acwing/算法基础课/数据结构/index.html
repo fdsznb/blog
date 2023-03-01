@@ -24,7 +24,7 @@
 <meta property="og:description" content="学习 acwing 的数据结构篇。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-02-27T02:42:05.000Z">
-<meta property="article:modified_time" content="2023-02-27T03:01:45.647Z">
+<meta property="article:modified_time" content="2023-02-27T03:10:49.611Z">
 <meta property="article:author" content="violet">
 <meta property="article:tag" content="acwing">
 <meta name="twitter:card" content="summary_large_image">
@@ -42,7 +42,7 @@
     
     
       
-      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/srcery.min.css" />
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10/styles/monokai.min.css" />
     
   
 
@@ -184,7 +184,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      33 分钟
+      34 分钟
     </span>
   
 
@@ -216,7 +216,7 @@
             <h1 style="display: none">数据结构</h1>
             
             <div class="markdown-body">
-              <h1 id="一、单链表"><a href="#一、单链表" class="headerlink" title="一、单链表"></a>一、单链表</h1><figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-type">int</span> cur = <span class="hljs-number">1</span>, e[N], ne[N];<br><br><span class="hljs-comment">// 在节点a的右边插入一个数x</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-type">int</span> k, <span class="hljs-type">int</span> x)</span></span><br><span class="hljs-function"></span>&#123;<br>    e[cur] = x; ne[cur] = ne[k]; ne[k] = cur++;<br>&#125;<br><br><span class="hljs-comment">// 删除节点 k</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">del</span><span class="hljs-params">(<span class="hljs-type">int</span> k)</span></span><br><span class="hljs-function"></span>&#123;<br>    ne[k] = ne[ne[k]];<br>&#125;<br></code></pre></div></td></tr></table></figure>
+              <h1 id="一、单链表"><a href="#一、单链表" class="headerlink" title="一、单链表"></a>一、单链表</h1><figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-comment">// 头节点占用 0 的位置，方便处理</span><br><br><span class="hljs-type">int</span> cur = <span class="hljs-number">1</span>, e[N], ne[N];<br><br><span class="hljs-comment">// 在节点a的右边插入一个数x</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">add</span><span class="hljs-params">(<span class="hljs-type">int</span> k, <span class="hljs-type">int</span> x)</span></span><br><span class="hljs-function"></span>&#123;<br>    e[cur] = x; ne[cur] = ne[k]; ne[k] = cur++;<br>&#125;<br><br><span class="hljs-comment">// 删除节点 k</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">del</span><span class="hljs-params">(<span class="hljs-type">int</span> k)</span></span><br><span class="hljs-function"></span>&#123;<br>    ne[k] = ne[ne[k]];<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
 <h1 id="二、双链表"><a href="#二、双链表" class="headerlink" title="二、双链表"></a>二、双链表</h1><figure class="highlight c++"><table><tr><td class="gutter hljs"><div class="hljs code-wrapper"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></div></td><td class="code"><div class="hljs code-wrapper"><pre><code class="hljs c++"><span class="hljs-type">int</span> e[N], l[N], r[N], idx;<br><br><span class="hljs-comment">// 在节点a的右边插入一个数x</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">insert</span><span class="hljs-params">(<span class="hljs-type">int</span> a, <span class="hljs-type">int</span> x)</span></span><br><span class="hljs-function"></span>&#123;<br>    e[idx] = x;<br>    l[idx] = a, r[idx] = r[a];<br>    l[r[a]] = idx, r[a] = idx ++ ;<br>&#125;<br><br><span class="hljs-comment">// 删除节点 k</span><br><span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">remove</span><span class="hljs-params">(<span class="hljs-type">int</span> k)</span></span><br><span class="hljs-function"></span>&#123;<br>    l[r[k]] = l[k];<br>    r[l[k]] = r[k];<br>&#125;<br></code></pre></div></td></tr></table></figure>
 
@@ -268,9 +268,9 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2099/02/16/%E6%9C%AA%E5%AE%8C%E6%88%90%E7%9A%84%E4%BA%8B%E6%83%85/">
+                      <a href="/2023/03/01/Linux%E4%B8%BB%E6%9C%BA%E6%96%87%E4%BB%B6777%EF%BC%8C755%EF%BC%8C644%E6%9D%83%E9%99%90%E8%AF%A6%E8%A7%A3-%E9%80%9A%E4%BF%97%E6%98%93%E6%87%82/">
                         <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">未完成的事情</span>
+                        <span class="hidden-mobile">Linux主机文件777，755，644权限详解[通俗易懂]</span>
                         <span class="visible-mobile">上一篇</span>
                       </a>
                     
